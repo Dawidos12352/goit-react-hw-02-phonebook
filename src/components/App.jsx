@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import Phonebook from "./Phonebook/Phonebook";
-import Contacts from "./Contacts/Contacts";
-import Filter from "./Filter/Filter"
+import Phonebook from "components/Phonebook/Phonebook";
+import Contacts from "components/Contacts/Contacts";
+import Filter from "components/Filter/Filter"
 
 
 
