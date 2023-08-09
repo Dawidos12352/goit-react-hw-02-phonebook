@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { Component } from "react";
 import Phonebook from "components/Phonebook/Phonebook";
 import Contacts from "components/Contacts/Contacts";
 import Filter from "components/Filter/Filter"
@@ -6,38 +6,35 @@ import Filter from "components/Filter/Filter"
 
 
 
-
-export const App = () => {
-
-  const [contacts, setContacts] = useState([
-    { id: 'id-1', name: 'Rosie Simpson', number: '459-12-56' },
-    { id: 'id-2', name: 'Hermione Kline', number: '443-89-12' },
-    { id: 'id-3', name: 'Eden Clements', number: '645-17-79' },
-    { id: 'id-4', name: 'Annie Copeland', number: '227-91-26' },
-  ]);
-  const [filter, setFilter] = useState('');
-
-  const addContact = contact => {
-    const isContact = contacts.some(event =>
-      event.name.toLowerCase() === contact.name.toLowerCase());
- 
-
-  if(isContact) {
-    alert(`${contact.name} is already in contacts.`);
-    return;
+export class App extends Component {
+  state = {
+    contacts: [],
+    filter: "",
   };
 
-  setContacts(prevContacts => [...prevContacts, contact]);
-};
+  handleAddContact(newContact) {
+    console.log(this.state);
+    this.setState((prevState) => ({
+      contacts: [...prevState.contacts, newContact],
+    }));
+  }
 
-const deleteContact = id => {
-  setContacts(prevContacts =>
-    prevContacts.filter(contact => contact.id !== id));
-};
+  handleFilter(event) {
+    const { value } = event.target;
 
-const filteredContacts = contacts.filter(contact =>
-  contact.name.toLowerCase().includes(filter.toLowerCase()));
+    this.setState({ filter: value });
+  }
 
+  handleDelete(id) {
+    const filteredContacts = this.state.contacts.filter(
+      (contact) => contact.id !== id
+    );
+
+    this.setState({ contacts: filteredContacts });
+  }
+
+  render() {
+    const { contacts, filter } = this.state;
 
   return (
     <div
@@ -51,15 +48,19 @@ const filteredContacts = contacts.filter(contact =>
       }}
     >
       <h1>Phonebook</h1>
-      <Phonebook addContact={addContact}/>
+      <Phonebook  handleAddContact={this.handleAddContact.bind(this)}
+          contacts={contacts}/>
       <h2>Contacts</h2>
-      <Filter filter={filter} onChangeFilter={setFilter}/>
-      {filteredContacts.length > 0 ? (
-      <Contacts contacts={filteredContacts} onDeleteContact={deleteContact}/>
-      ) : ( <p>No contacts found.</p>)
-    }
+      <Filter filterText={filter}
+          handleFilter={this.handleFilter.bind(this)}/>
+      
+      <Contacts contacts={contacts}
+          filterText={filter}
+          handleDelete={this.handleDelete.bind(this)}
+        />
+      
     </div> 
   );
 };
-
+}
 export default App;
